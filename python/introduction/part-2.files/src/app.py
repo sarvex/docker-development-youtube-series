@@ -7,17 +7,15 @@ class Customer:
     self.firstName  = f
     self.lastName   = l
   def fullName(self):
-    return self.firstName + " " + self.lastName
+    return f"{self.firstName} {self.lastName}"
 
 def getCustomers():
-  if os.path.isfile("customers.log"):
-    with open('customers.log', newline='') as customerFile:
-      reader = csv.DictReader(customerFile)
-      l = list(reader)
-      customers = {c["customerID"]: c for c in l}
-      return customers
-  else: 
+  if not os.path.isfile("customers.log"):
     return {}
+  with open('customers.log', newline='') as customerFile:
+    reader = csv.DictReader(customerFile)
+    l = list(reader)
+    return {c["customerID"]: c for c in l}
 
 def updateCustomers(customers):
   fields = ['customerID', 'firstName', 'lastName']

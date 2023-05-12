@@ -11,24 +11,19 @@ class Customer:
     self.firstName  = f
     self.lastName   = l
   def fullName(self):
-    return self.firstName + " " + self.lastName
+    return f"{self.firstName} {self.lastName}"
 
 def getCustomers():
-  if os.path.isfile(dataPath):
-    with open(dataPath, newline='') as customerFile:
-      data = customerFile.read()
-      customers = json.loads(data)
-      return customers
-  else: 
+  if not os.path.isfile(dataPath):
     return {}
+  with open(dataPath, newline='') as customerFile:
+    data = customerFile.read()
+    return json.loads(data)
 
 def getCustomer(customerID):
   customers = getCustomers()
 
-  if customerID in customers:
-    return customers[customerID]
-  else:
-    return {}
+  return customers[customerID] if customerID in customers else {}
 
 def updateCustomers(customers):
   with open(dataPath, 'w', newline='') as customerFile:
@@ -44,12 +39,9 @@ def get_customers():
 
 @app.route("/get/<string:customerID>", methods=['GET'])
 def get_customer(customerID):
-    customer = getCustomer(customerID)
+  customer = getCustomer(customerID)
 
-    if customer == {}:
-      return {}, 404
-    else:
-      return customer
+  return ({}, 404) if customer == {} else customer
 
 @app.route("/add", methods=['POST'])
 def add_customer():

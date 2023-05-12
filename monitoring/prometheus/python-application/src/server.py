@@ -8,8 +8,12 @@ app = Flask(__name__)
 
 _INF = float("inf")
 
-graphs = {}
-graphs['c'] = Counter('python_request_operations_total', 'The total number of processed requests')
+graphs = {
+    'c': Counter(
+        'python_request_operations_total',
+        'The total number of processed requests',
+    )
+}
 graphs['h'] = Histogram('python_request_duration_seconds', 'Histogram for the duration in seconds.', buckets=(1, 2, 5, 6, 10, _INF))
 
 @app.route("/")
@@ -24,8 +28,6 @@ def hello():
 
 @app.route("/metrics")
 def requests_count():
-    res = []
-    for k,v in graphs.items():
-        res.append(prometheus_client.generate_latest(v))
+    res = [prometheus_client.generate_latest(v) for k, v in graphs.items()]
     return Response(res, mimetype="text/plain")
 

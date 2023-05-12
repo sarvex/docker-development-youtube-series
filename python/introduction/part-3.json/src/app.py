@@ -8,16 +8,14 @@ class Customer:
     self.firstName  = f
     self.lastName   = l
   def fullName(self):
-    return self.firstName + " " + self.lastName
+    return f"{self.firstName} {self.lastName}"
 
 def getCustomers():
-  if os.path.isfile("customers.json"):
-    with open('customers.json', newline='') as customerFile:
-      data = customerFile.read()
-      customers = json.loads(data)
-      return customers
-  else: 
+  if not os.path.isfile("customers.json"):
     return {}
+  with open('customers.json', newline='') as customerFile:
+    data = customerFile.read()
+    return json.loads(data)
 
 def getCustomer(customerID):
   customer = getCustomers()
@@ -39,12 +37,7 @@ customers = {
     "h" : Customer("h", "Marcel", "Dempers")
 }
 
-customerDict = {}
-
-for id in customers:
-  customerDict[id] = customers[id].__dict__
-
-
+customerDict = {id: customers[id].__dict__ for id in customers}
 updateCustomers(customerDict)
 
 customers = getCustomers()
